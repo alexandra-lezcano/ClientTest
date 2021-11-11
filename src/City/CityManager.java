@@ -1,8 +1,8 @@
 package City;
 
 import Base.AbstractBaseManager;
+import Neightborhood.NeighborhoodManager;
 import com.protectionapp.sd2021.dto.localization.CityDTO;
-import com.protectionapp.sd2021.dto.user.UserDTO;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,44 +10,50 @@ import java.util.Set;
 public class CityManager extends AbstractBaseManager {
     public CityManager(){super();}
 
-    // Post
-    public void addCity(){
-        CityDTO cityTest = new CityDTO();
-        cityTest.setName("Encarnacion2");
-        cityTest.setDescription("xyz habitantes");
-        //cityTest.setNeighborhood();
-        //cityTest.setNeighborhood();
+    public String pathToResource = "/cities";
 
-        getJerseyClient().resource(getBaseUrl()+"/cities").entity(cityTest).post(CityDTO.class);
+    // Post
+    public void addCity(String name, String description){
+        System.out.println("TEST POST /cities [name: "+name+", "+"descripcion: "+description+"]");
+        CityDTO cityTest = new CityDTO();
+        cityTest.setName(name);
+        cityTest.setDescription(description);
+
+        CityDTO response = getJerseyClient().resource(getBaseUrl()+pathToResource).entity(cityTest).post(CityDTO.class);
+        System.out.println("TEST POST RESPONSE /cities  "+response.toString());
     }
 
     //Get by id
-    public void getCity(){
-        getJerseyClient().resource(getBaseUrl()+"/cities/1").get(CityDTO.class);
+    public void getById(Integer id){
+        NeighborhoodManager nManager = new NeighborhoodManager();
+       System.out.println("TEST GET BY ID "+id);
+       CityDTO cityDTO =  getJerseyClient().resource(getBaseUrl()+pathToResource+"/"+id).get(CityDTO.class);
+        System.out.println("TEST GET BY ID "+ cityDTO.toString());
+        System.out.println("Neighborhoods in city: ");
+        System.out.println(cityDTO.getNeighborhoods());
+        //cityDTO.getNeighborhoods().forEach(nID -> nManager.getById(nID).toString() );
     }
+
 
     //Put
     public void updateCity(){
-        CityDTO cityTest = new CityDTO();
-        /*cityTest.setName("Asuncion2");
-        cityTest.setDescription("xy habitantes y apestosa");
+        String cityName= "Asuncion";
+        String newDescription = "Test descripcion";
 
-        getJerseyClient().resource(getBaseUrl()+"/cities").entity(cityTest).post(CityDTO.class);*/
+        CityDTO cityTest = getJerseyClient().resource(getBaseUrl()+pathToResource+"/1").get(CityDTO.class);
+        System.out.println("TEST PUT RESPONSE /cities  update: "+cityTest.toString());
+        System.out.println("with new params: "+cityName+" "+newDescription);
 
-        cityTest.setDescription("apestosa! pero interesante.");
-        Set<Integer> user_ids = new HashSet<>();
-        user_ids.add(2);
-        user_ids.add(3);
-        user_ids.add(4);
+        cityTest.setName(cityName);
+        cityTest.setDescription(newDescription);
 
-        cityTest.setUsers(user_ids);
-        getJerseyClient().resource(getBaseUrl()+"/cities/4").entity(cityTest).put(CityDTO.class);
+        CityDTO updatedCity =  getJerseyClient().resource(getBaseUrl()+pathToResource+"/2").entity(cityTest).put(CityDTO.class);
+        System.out.println("TEST PUT RESPONSE /cities  "+updatedCity.toString());
+
     }
+
 
     // todo GET ALL
     // todo DELETE
     // todo RELATIONSHIPS DAMN
-
-
-
 }

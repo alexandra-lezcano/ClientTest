@@ -3,7 +3,7 @@ package Base;
 import com.sun.jersey.api.client.Client;
 
 public abstract class AbstractBaseManager {
-    private final String BASE_URL = "http://localhost:8080/";
+    private final String BASE_URL = "http://localhost:8080";
     private final Client _jerseyClient;
 
     public AbstractBaseManager() {
